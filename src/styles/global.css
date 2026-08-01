@@ -104,3 +104,118 @@
 .agenda-main strong,.agenda-main small{display:block}.agenda-main small{margin-top:4px;color:var(--muted)}
 .agenda-meta{display:flex;align-items:center;justify-content:flex-end;gap:14px;flex-wrap:wrap}.agenda-meta>span:not(.project-status){display:inline-flex;align-items:center;gap:5px;color:var(--muted);font-size:12px}.day-empty{padding:28px}
 @media(max-width:760px){.agenda-project{grid-template-columns:auto 1fr}.agenda-meta{grid-column:2;justify-content:flex-start}}
+
+/* v4.2 lighter calendar + clear action colors */
+.calendar-panel{
+  background:#eef3f8;
+}
+.calendar-weekdays{
+  background:#dfe7ef;
+}
+.calendar-weekdays span{
+  color:#42566d;
+}
+.calendar-day{
+  color:#102030;
+  background:#ffffff;
+  border-color:#cfd9e4;
+}
+.calendar-day:hover{
+  background:#f5f8fb;
+}
+.calendar-day.muted-day{
+  opacity:.55;
+  background:#f2f5f8;
+}
+.calendar-day.today{
+  box-shadow:inset 0 0 0 2px var(--accent);
+}
+.calendar-day.selected-day{
+  box-shadow:inset 0 0 0 3px var(--accent);
+  background:#eefcf8;
+}
+.day-number{
+  color:#102030;
+}
+.calendar-project{
+  color:#102030;
+}
+.calendar-project.planning,.project-status.planning{
+  background:#dbe7ff;
+  color:#244a8f;
+}
+.calendar-project.awaiting,.project-status.awaiting{
+  background:#fff1bf;
+  color:#7f5d00;
+}
+.calendar-project.tentative,.project-status.tentative{
+  background:#ffe1c2;
+  color:#8f4f00;
+}
+.calendar-project.scheduled,.project-status.scheduled{
+  background:#d7f5e7;
+  color:#176c4b;
+}
+.calendar-project.progress,.project-status.progress{
+  background:#dbe7ff;
+  color:#244a8f;
+}
+.calendar-project.complete,.project-status.complete{
+  background:#d9f4df;
+  color:#246b34;
+}
+.calendar-project.hold,.project-status.hold{
+  background:#ffd8dc;
+  color:#8b2631;
+}
+.calendar-project.cancelled,.project-status.cancelled{
+  background:#eceff3;
+  color:#5b6570;
+  text-decoration:line-through;
+}
+.project-action-row{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:18px;
+}
+.project-action{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  min-height:40px;
+  border:1px solid transparent;
+  border-radius:10px;
+  font-weight:800;
+  cursor:pointer;
+}
+.schedule-action{
+  color:#0d5a3f;
+  background:#d7f5e7;
+  border-color:#9ad8bd;
+}
+.schedule-action:hover{
+  background:#c5ecd9;
+}
+.cancel-action{
+  color:#7d4300;
+  background:#ffe3bd;
+  border-color:#efbd7d;
+}
+.cancel-action:hover{
+  background:#ffd39a;
+}
+.delete-action{
+  color:#8d1d29;
+  background:#ffd9dd;
+  border-color:#e7a1aa;
+}
+.delete-action:hover{
+  background:#ffc5cb;
+}
+@media(max-width:760px){
+  .project-action-row{
+    grid-template-columns:1fr;
+  }
+}

@@ -1,4 +1,4 @@
-# Relay Command Center v4.1 — Interactive Calendar
+# Relay Command Center v4.2 — Light Calendar Actions
 
 The stable demo-ready frontend for the Relay AI Support Dispatcher.
 
@@ -93,3 +93,13 @@ The GET Projects workflow may be connected first. Until the POST workflow is act
 - Project names shown on scheduled dates
 - Daily agenda panel
 - Supports full n8n date/time values
+
+
+## v4.2 visual changes
+
+- White calendar cells for easier reading
+- Light calendar background and darker date text
+- Schedule action styled green
+- Cancel action styled orange
+- Delete action styled red
+- Cancelled status styling included for future update workflow
