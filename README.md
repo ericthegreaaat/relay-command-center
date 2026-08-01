@@ -1,4 +1,4 @@
-# Relay Command Center v3.0
+# Relay Command Center v4.0 — Operations
 
 The stable demo-ready frontend for the Relay AI Support Dispatcher.
 
@@ -65,3 +65,23 @@ Use test data until login and webhook authentication are added.
 - Existing n8n GET ticket workflow remains unchanged
 
 The included login is presentation-only. It does not provide production authentication or protect the n8n endpoint.
+
+
+## v4 Operations additions
+
+- Shared Projects menu
+- Month calendar view
+- Multi-day projects
+- New Project form
+- Project list and detail panel
+- Tentative and Awaiting Availability statuses
+- Technician assignment and estimated labor
+- Separate GET and POST project webhook settings
+- Ticket workflow remains unchanged
+
+Expected project endpoints:
+
+- GET `https://ericthegreaaat.app.n8n.cloud/webhook/relay-projects`
+- POST `https://ericthegreaaat.app.n8n.cloud/webhook/relay-create-project`
+
+The GET Projects workflow may be connected first. Until the POST workflow is active, the New Project form will show that the project workflow is not ready.

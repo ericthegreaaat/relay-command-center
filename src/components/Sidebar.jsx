@@ -1,10 +1,11 @@
 import {
-  BarChart3, Bot, LayoutDashboard, Settings, TicketCheck, Users
+  BarChart3, Bot, CalendarDays, LayoutDashboard, Settings, TicketCheck, Users
 } from "lucide-react";
 
 const items = [
   ["dashboard", "Command Center", LayoutDashboard],
   ["tickets", "Tickets", TicketCheck],
+  ["projects", "Projects", CalendarDays],
   ["customers", "Customers", Users],
   ["assistant", "Ask Relay", Bot],
   ["reports", "Reports", BarChart3],

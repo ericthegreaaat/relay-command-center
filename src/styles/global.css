@@ -43,3 +43,48 @@
   .login-capabilities{grid-template-columns:1fr}
   .login-card{margin-bottom:50px}
 }
+
+.projects-layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(340px,.6fr);gap:18px}
+.calendar-panel{overflow:hidden}
+.calendar-header{align-items:center}
+.calendar-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.calendar-nav{width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--border);border-radius:10px}
+.calendar-weekdays{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border);background:#091524}
+.calendar-weekdays span{padding:11px;color:var(--muted);font-size:10px;font-weight:900;letter-spacing:.08em;text-align:center;text-transform:uppercase}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr)}
+.calendar-day{min-height:122px;padding:8px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);background:rgba(9,21,36,.45)}
+.calendar-day:nth-child(7n){border-right:0}
+.calendar-day.muted-day{opacity:.42}
+.calendar-day.today{box-shadow:inset 0 0 0 1px var(--accent)}
+.day-number{display:inline-grid;width:25px;height:25px;place-items:center;border-radius:50%;font-size:12px;font-weight:800}
+.today .day-number{color:#041018;background:var(--accent)}
+.day-projects{display:grid;gap:5px;margin-top:7px}
+.calendar-project{overflow:hidden;width:100%;padding:6px 7px;border:0;border-radius:7px;color:var(--text);font-size:10px;font-weight:800;text-align:left;text-overflow:ellipsis;white-space:nowrap}
+.calendar-project.planning,.project-status.planning{background:rgba(91,143,255,.15);color:#8fb5ff}
+.calendar-project.awaiting,.project-status.awaiting{background:rgba(255,209,102,.15);color:var(--medium)}
+.calendar-project.tentative,.project-status.tentative{background:rgba(255,159,67,.15);color:var(--high)}
+.calendar-project.scheduled,.project-status.scheduled{background:rgba(53,214,180,.15);color:var(--accent)}
+.calendar-project.progress,.project-status.progress{background:rgba(91,143,255,.2);color:#a9c3ff}
+.calendar-project.complete,.project-status.complete{background:rgba(85,209,135,.15);color:var(--low)}
+.calendar-project.hold,.project-status.hold{background:rgba(255,93,104,.15);color:var(--critical)}
+.projects-sidebar{display:grid;align-content:start;gap:18px}
+.project-list{max-height:360px;overflow:auto}
+.project-list>button{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:13px 16px;border:0;border-bottom:1px solid var(--border);color:var(--text);background:transparent;text-align:left}
+.project-list>button:hover,.project-list>button.selected{background:#13253d}
+.project-list strong,.project-list small{display:block}
+.project-list small{margin-top:4px;color:var(--muted)}
+.project-status{max-width:135px;padding:5px 8px;border-radius:999px;font-size:10px;font-weight:900;text-align:center}
+.project-detail{padding:18px}
+.project-detail>h3{margin:0;font-size:21px}
+.project-address{display:flex;align-items:flex-start;gap:7px;margin:16px 0;padding:12px;border:1px solid var(--border);border-radius:10px;color:var(--muted);background:#091625}
+.projects-banner{margin:12px}
+.project-modal{width:min(820px,100%)}
+@media(max-width:1200px){.projects-layout{grid-template-columns:1fr}.projects-sidebar{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){
+  .projects-sidebar{grid-template-columns:1fr}
+  .calendar-header{align-items:flex-start}
+  .calendar-actions{width:100%}
+  .calendar-grid,.calendar-weekdays{min-width:760px}
+  .calendar-panel{overflow:auto}
+  .calendar-day{min-height:105px}
+}

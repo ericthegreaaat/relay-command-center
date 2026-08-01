@@ -5,11 +5,14 @@ import DashboardPage from "./pages/DashboardPage";
 import CustomersPage from "./pages/CustomersPage";
 import ReportsPage from "./pages/ReportsPage";
 import AssistantPage from "./pages/AssistantPage";
+import ProjectsPage from "./pages/ProjectsPage";
 import LoginPage from "./pages/LoginPage";
 import TicketQueue from "./components/TicketQueue";
 import TicketDetail from "./components/TicketDetail";
 import NewTicketModal from "./components/NewTicketModal";
+import NewProjectModal from "./components/NewProjectModal";
 import { createTicket, DEFAULT_CREATE_URL, DEFAULT_TICKETS_URL, fetchTickets } from "./services/relayApi";
+import { createProject, DEFAULT_CREATE_PROJECT_URL, DEFAULT_PROJECTS_URL, fetchProjects } from "./services/projectsApi";
 
 const demoTickets = [{
   TicketID:"PAX-DEMO-001",CustomerName:"Eric",CompanyName:"PAX Telecom",
@@ -36,6 +39,10 @@ export default function App() {
   const [priority,setPriority]=useState("");
   const [status,setStatus]=useState("");
   const [showNewTicket,setShowNewTicket]=useState(false);
+  const [showNewProject,setShowNewProject]=useState(false);
+  const [projects,setProjects]=useState([]);
+  const [projectsLoading,setProjectsLoading]=useState(false);
+  const [projectsError,setProjectsError]=useState("");
   const [lastUpdated,setLastUpdated]=useState(null);
   const [newCount,setNewCount]=useState(0);
   const priorIds=useRef(new Set());
@@ -44,6 +51,8 @@ export default function App() {
   const [createUrl,setCreateUrl]=useState(localStorage.getItem("relayCreateUrl")||DEFAULT_CREATE_URL);
   const [demoFallback,setDemoFallback]=useState(localStorage.getItem("relayDemoFallback")!=="false");
   const [autoRefresh,setAutoRefresh]=useState(localStorage.getItem("relayAutoRefresh")!=="false");
+  const [projectsUrl,setProjectsUrl]=useState(localStorage.getItem("relayProjectsUrl")||DEFAULT_PROJECTS_URL);
+  const [createProjectUrl,setCreateProjectUrl]=useState(localStorage.getItem("relayCreateProjectUrl")||DEFAULT_CREATE_PROJECT_URL);
 
   const loadTickets=async(silent=false)=>{
     if(!silent){setConnection("connecting");setNotice("")}
@@ -69,7 +78,22 @@ export default function App() {
     }
   };
 
-  useEffect(()=>{if(user)loadTickets()},[user]);
+
+  const loadProjects=async()=>{
+    setProjectsLoading(true);
+    setProjectsError("");
+    try{
+      const rows=await fetchProjects(projectsUrl);
+      setProjects(rows);
+    }catch(error){
+      setProjectsError(`Projects are not connected yet. ${error.message}`);
+      setProjects([]);
+    }finally{
+      setProjectsLoading(false);
+    }
+  };
+
+  useEffect(()=>{if(user){loadTickets();loadProjects()}},[user]);
 
   useEffect(()=>{
     if(!user||!autoRefresh)return;
@@ -100,6 +124,8 @@ export default function App() {
     localStorage.setItem("relayCreateUrl",createUrl);
     localStorage.setItem("relayDemoFallback",String(demoFallback));
     localStorage.setItem("relayAutoRefresh",String(autoRefresh));
+    localStorage.setItem("relayProjectsUrl",projectsUrl);
+    localStorage.setItem("relayCreateProjectUrl",createProjectUrl);
     setNotice("Relay settings saved.");
     loadTickets();
   };
@@ -107,7 +133,7 @@ export default function App() {
   if(!user)return <LoginPage onLogin={setUser}/>;
 
   const title={
-    dashboard:"Command Center",tickets:"Tickets",customers:"Customers",
+    dashboard:"Command Center",tickets:"Tickets",projects:"Projects",customers:"Customers",
     assistant:"Ask Relay",reports:"Reports",settings:"Settings"
   }[view];
 
@@ -160,7 +186,8 @@ export default function App() {
         </section>
       }
 
-      {view==="customers"&&<CustomersPage tickets={tickets}/>}
+      {view==="projects"&&<ProjectsPage projects={projects} loading={projectsLoading} error={projectsError} onNewProject={()=>setShowNewProject(true)}/>} 
+      {view==="customers"&&<CustomersPage tickets={tickets}/>} 
       {view==="assistant"&&<AssistantPage/>}
       {view==="reports"&&<ReportsPage tickets={tickets}/>}
 
@@ -175,6 +202,14 @@ export default function App() {
             Create Ticket POST webhook
             <input value={createUrl} onChange={(event)=>setCreateUrl(event.target.value)}/>
           </label>
+          <label>
+            Projects GET webhook
+            <input value={projectsUrl} onChange={(event)=>setProjectsUrl(event.target.value)}/>
+          </label>
+          <label>
+            Create Project POST webhook
+            <input value={createProjectUrl} onChange={(event)=>setCreateProjectUrl(event.target.value)}/>
+          </label>
           <label className="check-row">
             <input type="checkbox" checked={demoFallback} onChange={(event)=>setDemoFallback(event.target.checked)}/>
             Use demo data if n8n is unavailable
@@ -187,6 +222,16 @@ export default function App() {
         </form>
       }
     </main>
+
+    {showNewProject&&
+      <NewProjectModal
+        onClose={()=>setShowNewProject(false)}
+        onCreate={async(payload)=>{
+          await createProject(createProjectUrl,payload);
+          await loadProjects();
+        }}
+      />
+    }
 
     {showNewTicket&&
       <NewTicketModal
