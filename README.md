@@ -1,4 +1,4 @@
-# Relay Command Center v4.0 — Operations
+# Relay Command Center v4.1 — Interactive Calendar
 
 The stable demo-ready frontend for the Relay AI Support Dispatcher.
 
@@ -85,3 +85,11 @@ Expected project endpoints:
 - POST `https://ericthegreaaat.app.n8n.cloud/webhook/relay-create-project`
 
 The GET Projects workflow may be connected first. Until the POST workflow is active, the New Project form will show that the project workflow is not ready.
+
+
+## v4.1
+- Clickable calendar dates
+- Visible event count badges
+- Project names shown on scheduled dates
+- Daily agenda panel
+- Supports full n8n date/time values
