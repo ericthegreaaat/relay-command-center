@@ -1,4 +1,5 @@
 import { formatDate, priorityClass, yesNo } from "../utils/formatters";
+import TicketTimeline from "./TicketTimeline";
 
 const Card = ({ label, children }) => <div className="detail-card"><label>{label}</label><div>{children}</div></div>;
 const Section = ({ label, children }) => <section className="detail-section"><h4>{label}</h4><p>{children}</p></section>;
@@ -29,7 +30,7 @@ export default function TicketDetail({ ticket }) {
           <Section label="AI Confidence">{ticket.Confidence !== "" ? `${ticket.Confidence}%` : "—"}</Section>
           <Section label="Internal Notes">{ticket.InternalNotes || "—"}</Section>
           <Section label="Customer Reply">{ticket.CustomerReply || "—"}</Section>
-          <Section label="Created">{formatDate(ticket.Created)}</Section>
+          <Section label="Created">{formatDate(ticket.Created)}</Section><section className="detail-section"><h4>Ticket Timeline</h4><TicketTimeline ticket={ticket} /></section>
         </div>
       )}
     </section>

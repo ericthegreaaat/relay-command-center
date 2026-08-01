@@ -1,4 +1,4 @@
-# Relay Command Center v2.0
+# Relay Command Center v3.0
 
 The stable demo-ready frontend for the Relay AI Support Dispatcher.
 
@@ -51,3 +51,17 @@ The interface already sends:
 ```
 
 Use test data until login and webhook authentication are added.
+
+
+## v3 Enterprise additions
+
+- Demo login experience
+- Automatic 15-second ticket refresh
+- New-ticket notification counter
+- Last-updated timestamp
+- Ticket event timeline
+- Priority-distribution analytics
+- Improved mobile presentation
+- Existing n8n GET ticket workflow remains unchanged
+
+The included login is presentation-only. It does not provide production authentication or protect the n8n endpoint.
