@@ -1,42 +1,53 @@
-# Relay Command Center React v1
+# Relay Command Center v2.0
+
+The stable demo-ready frontend for the Relay AI Support Dispatcher.
 
 ## Included
+
 - Live n8n ticket feed
-- Dashboard metrics
-- Ticket queue, search, and filters
-- AI dispatch detail panel
+- Relay AI briefing and confidence gauge
+- Executive dashboard metrics
+- Searchable and filterable ticket queue
+- Full AI dispatch analysis
 - Customer profiles
-- Reports
+- Operations reports
 - Ask Relay preview
-- Settings
-- New Ticket form wired to a future POST webhook
+- Live activity and technician workload
+- New Ticket interface
+- Configurable GET and POST webhooks
+- Responsive dark interface
+- Relay icon and public assets
 
-## Run locally
-1. Install Node.js.
-2. Open a terminal in this folder.
-3. Run:
-   npm install
-   npm run dev
+## Netlify
 
-## Deploy to Netlify
-Recommended:
-- Push this folder to GitHub and import it into Netlify.
-- Build command: npm run build
-- Publish directory: dist
+Build command:
 
-Or build locally with:
-   npm install
-   npm run build
+`npm run build`
 
-Then upload the generated dist folder to Netlify.
+Publish directory:
 
-## Existing GET webhook
-https://ericthegreaaat.app.n8n.cloud/webhook/relay-tickets
+`dist`
 
-## Next workflow
-Create an n8n POST webhook at:
-https://ericthegreaaat.app.n8n.cloud/webhook/relay-create-ticket
+## Current live GET endpoint
 
-It should accept customerName, companyName, customerEmail, subject, and body; then run Relay AI, create the Ticket ID, insert the row, and return JSON.
+`https://ericthegreaaat.app.n8n.cloud/webhook/relay-tickets`
 
-Use test data only until authentication is added.
+## Next focused backend enhancement
+
+Create the POST workflow:
+
+`https://ericthegreaaat.app.n8n.cloud/webhook/relay-create-ticket`
+
+The interface already sends:
+
+```json
+{
+  "customerName": "Eric",
+  "companyName": "PAX Telecom",
+  "customerEmail": "eric@example.com",
+  "subject": "Phones down",
+  "body": "All phones are unavailable."
+}
+```
+
+Use test data until login and webhook authentication are added.
