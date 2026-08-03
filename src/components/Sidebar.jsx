@@ -3,13 +3,14 @@ import {
 } from "lucide-react";
 
 const items = [
-  ["dashboard", "Command Center", LayoutDashboard],
-  ["tickets", "Tickets", TicketCheck],
-  ["projects", "Projects", CalendarDays],
-  ["customers", "Customers", Users],
-  ["assistant", "Ask Relay", Bot],
-  ["reports", "Reports", BarChart3],
-  ["settings", "Settings", Settings],
+  ["dashboard", "🌉 Bridge", LayoutDashboard],
+  ["signals", "📡 Signals", TicketCheck],
+  ["tickets", "🎫 Operations", TicketCheck],
+  ["projects", "🎯 Missions", CalendarDays],
+  ["customers", "👥 Clients", Users],
+  ["reports", "📊 Intel", BarChart3],
+  ["assistant", "🤖 Relay Core", Bot],
+  ["settings", "⚙ Engineering", Settings],
 ];
 
 export default function Sidebar({ active, onChange, connection }) {
