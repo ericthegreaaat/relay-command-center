@@ -97,7 +97,7 @@ export default function App() {
 
   useEffect(()=>{
     if(!user||!autoRefresh)return;
-    const timer=window.setInterval(()=>loadTickets(true),15000);
+    const timer=window.setInterval(()=>{loadTickets(true);loadProjects();},1200000);
     return()=>window.clearInterval(timer);
   },[user,autoRefresh,ticketsUrl,demoFallback]);
 
@@ -146,7 +146,7 @@ export default function App() {
           <h2>{title}</h2>
           <p>
             AI-assisted support operations for PAX Telecom
-            {lastUpdated&&<span className="last-updated"> · Updated {lastUpdated.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"})}</span>}
+            {lastUpdated&&<span className="last-updated"> · Last sync {lastUpdated.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"})}</span>}
           </p>
         </div>
 
@@ -155,7 +155,7 @@ export default function App() {
             <Bell size={17}/>
             {newCount>0&&<span>{newCount}</span>}
           </button>
-          <button className="button secondary" onClick={()=>loadTickets()}>
+          <button className="button secondary" onClick={()=>{loadTickets();loadProjects();}}>
             <RefreshCw size={16}/> Refresh
           </button>
           <button className="button primary" onClick={()=>setShowNewTicket(true)}>
@@ -193,7 +193,7 @@ export default function App() {
 
       {view==="settings"&&
         <form className="panel settings-page" onSubmit={saveSettings}>
-          <h3>Relay Connections</h3>
+          <h3>Relay Connections</h3><div className="sync-note">Relay refreshes automatically every 20 minutes. Use Refresh anytime for an immediate sync.</div>
           <label>
             Tickets GET webhook
             <input value={ticketsUrl} onChange={(event)=>setTicketsUrl(event.target.value)}/>
@@ -216,7 +216,7 @@ export default function App() {
           </label>
           <label className="check-row">
             <input type="checkbox" checked={autoRefresh} onChange={(event)=>setAutoRefresh(event.target.checked)}/>
-            Refresh live ticket data every 15 seconds
+            Refresh tickets and projects every 20 minutes
           </label>
           <button className="button primary" type="submit">Save Settings</button>
         </form>

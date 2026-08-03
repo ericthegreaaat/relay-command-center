@@ -1,4 +1,4 @@
-# Relay Command Center v4.2 — Light Calendar Actions
+# Relay Command Center v4.3 — Optimized Sync
 
 The stable demo-ready frontend for the Relay AI Support Dispatcher.
 
@@ -103,3 +103,13 @@ The GET Projects workflow may be connected first. Until the POST workflow is act
 - Cancel action styled orange
 - Delete action styled red
 - Cancelled status styling included for future update workflow
+
+
+## v4.3 execution optimization
+
+- Automatic refresh changed from 15 seconds to 20 minutes
+- Manual Refresh reloads tickets and projects immediately
+- Project creation refreshes projects only
+- Ticket creation refreshes tickets only
+- Last Sync timestamp remains visible
+- Existing data stays loaded between refreshes
