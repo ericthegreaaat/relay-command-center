@@ -132,10 +132,16 @@ export default function App() {
 
   if(!user)return <LoginPage onLogin={setUser}/>;
 
-  const title={
-    dashboard:"Command Center",tickets:"Tickets",projects:"Projects",customers:"Customers",
-    assistant:"Ask Relay",reports:"Reports",settings:"Settings"
-  }[view];
+  const title = {
+  dashboard: "🌉 Bridge",
+  signals: "📡 Signals",
+  tickets: "🎫 Operations Desk",
+  projects: "🎯 Mission Control",
+  customers: "👥 Clients",
+  assistant: "🤖 Relay Core",
+  reports: "📊 Intel",
+  settings: "⚙ Engineering",
+}[view];
 
   return <div className="app-shell">
     <Sidebar active={view} onChange={setView} connection={connection}/>
@@ -145,7 +151,7 @@ export default function App() {
         <div>
           <h2>{title}</h2>
           <p>
-            AI-assisted support operations for PAX Telecom
+            Relay Command & Control Platform for PAX Telecom
             {lastUpdated&&<span className="last-updated"> · Last sync {lastUpdated.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"})}</span>}
           </p>
         </div>
@@ -159,8 +165,8 @@ export default function App() {
             <RefreshCw size={16}/> Refresh
           </button>
           <button className="button primary" onClick={()=>setShowNewTicket(true)}>
-            <CirclePlus size={17}/> New Ticket
-          </button>
+  <CirclePlus size={17}/> New Signal
+</button>
           <button className="avatar avatar-button" title="Sign out" onClick={()=>{
             sessionStorage.removeItem("relaySession");
             setUser("");
@@ -188,7 +194,7 @@ export default function App() {
 
       {view==="projects"&&<ProjectsPage projects={projects} loading={projectsLoading} error={projectsError} onNewProject={()=>setShowNewProject(true)}/>} 
       {view==="customers"&&<CustomersPage tickets={tickets}/>} 
-      {view==="assistant"&&<AssistantPage/>}
+      {(view==="assistant" || view==="signals") && <AssistantPage />}
       {view==="reports"&&<ReportsPage tickets={tickets}/>}
 
       {view==="settings"&&
