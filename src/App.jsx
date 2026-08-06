@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Bell, CirclePlus, LogOut, RefreshCw } from "lucide-react";
+import { Bell, CirclePlus, RefreshCw } from "lucide-react";
 import Sidebar from "./components/Sidebar";
 import BootSequence from "./components/BootSequence";
 import DashboardPage from "./pages/DashboardPage";
@@ -7,7 +7,7 @@ import CustomersPage from "./pages/CustomersPage";
 import ReportsPage from "./pages/ReportsPage";
 import AssistantPage from "./pages/AssistantPage";
 import ProjectsPage from "./pages/ProjectsPage";
-import LoginPage from "./pages/LoginPage";
+
 import TicketQueue from "./components/TicketQueue";
 import TicketDetail from "./components/TicketDetail";
 import NewTicketModal from "./components/NewTicketModal";
@@ -31,7 +31,7 @@ const demoTickets = [{
 
 export default function App() {
   
-  const [user,setUser]=useState(sessionStorage.getItem("relaySession")||"");
+  const [user] = useState("Architect");
   const [bootComplete, setBootComplete] = useState(
   sessionStorage.getItem("relayBootComplete") === "true"
 );
@@ -145,7 +145,6 @@ export default function App() {
     />
   );
 }
-  if(!user)return <LoginPage onLogin={setUser}/>;
 
   const title = {
   dashboard: "🌉 Bridge",
@@ -172,23 +171,31 @@ export default function App() {
         </div>
 
         <div className="top-actions">
-          <button className="notification-button" onClick={()=>setNewCount(0)} title="New ticket notifications">
-            <Bell size={17}/>
-            {newCount>0&&<span>{newCount}</span>}
-          </button>
-          <button className="button secondary" onClick={()=>{loadTickets();loadProjects();}}>
-            <RefreshCw size={16}/> Refresh
-          </button>
-          <button className="button primary" onClick={()=>setShowNewTicket(true)}>
-  <CirclePlus size={17}/> New Signal
-</button>
-          <button className="avatar avatar-button" title="Sign out" onClick={()=>{
-            sessionStorage.removeItem("relaySession");
-            setUser("");
-          }}>
-            <LogOut size={17}/>
-          </button>
-        </div>
+  <button
+    className="notification-button"
+    onClick={() => setNewCount(0)}
+    title="New ticket notifications"
+  >
+    <Bell size={17} />
+    {newCount > 0 && <span>{newCount}</span>}
+  </button>
+
+  <button
+    className="button secondary"
+    onClick={() => loadTickets()}
+  >
+    <RefreshCw size={16} />
+    Refresh
+  </button>
+
+  <button
+    className="button primary"
+    onClick={() => setShowNewTicket(true)}
+  >
+    <CirclePlus size={17} />
+    New Signal
+  </button>
+</div>
       </header>
 
       {notice&&<div className="banner">{notice}</div>}
