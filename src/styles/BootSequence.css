@@ -1,0 +1,342 @@
+.boot-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: 24px;
+  color: #ff4b4b;
+  background:
+    radial-gradient(circle at center, #20090b 0%, #08090b 48%, #010202 100%);
+  font-family: "Courier New", monospace;
+}
+
+.boot-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.3;
+  background-image:
+    linear-gradient(rgba(255, 48, 48, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 48, 48, 0.06) 1px, transparent 1px);
+  background-size: 38px 38px;
+}
+
+.boot-screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.45;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 3px,
+    rgba(255, 255, 255, 0.025) 4px
+  );
+}
+
+.boot-scanline {
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 110px;
+  opacity: 0.14;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 42, 42, 0.6),
+    transparent
+  );
+  animation: relay-scan 2.6s linear infinite;
+}
+
+.boot-v3 {
+  position: relative;
+  z-index: 2;
+  width: min(680px, 100%);
+  padding: 22px 26px 28px;
+  border: 1px solid rgba(255, 75, 75, 0.35);
+  background: rgba(4, 5, 6, 0.9);
+  box-shadow:
+    inset 0 0 45px rgba(255, 35, 35, 0.045),
+    0 0 55px rgba(255, 30, 30, 0.12);
+  transition:
+    opacity 650ms ease,
+    transform 650ms ease,
+    filter 650ms ease;
+}
+
+.boot-exit .boot-v3 {
+  opacity: 0;
+  filter: blur(6px);
+  transform: scale(1.025);
+}
+
+.boot-v3-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 13px;
+  border-bottom: 1px solid rgba(255, 72, 72, 0.25);
+  color: #985f5f;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+}
+
+.boot-v3-core {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  display: grid;
+  place-items: center;
+  margin: 26px auto 18px;
+}
+
+.boot-v3-core > p {
+  position: absolute;
+  bottom: 0;
+  margin: 0;
+  color: #a46b6b;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+}
+
+.core-eye {
+  position: relative;
+  z-index: 4;
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #ff4b4b;
+  border-radius: 50%;
+  background: #170405;
+  box-shadow:
+    0 0 15px rgba(255, 50, 50, 0.75),
+    0 0 48px rgba(255, 35, 35, 0.35),
+    inset 0 0 18px rgba(255, 45, 45, 0.4);
+  animation: relay-core-pulse 1.5s ease-in-out infinite;
+}
+
+.core-eye span {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ff3939;
+  box-shadow:
+    0 0 8px #ff3939,
+    0 0 22px #ff3939,
+    0 0 46px rgba(255, 57, 57, 0.9);
+}
+
+.core-ring {
+  position: absolute;
+  border: 1px solid rgba(255, 73, 73, 0.48);
+  border-radius: 50%;
+}
+
+.core-ring::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: calc(50% - 3px);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff4a4a;
+  box-shadow: 0 0 10px #ff4a4a;
+}
+
+.core-ring-outer {
+  width: 160px;
+  height: 160px;
+  border-style: dashed;
+  opacity: 0.55;
+  animation: relay-spin 7s linear infinite;
+}
+
+.core-ring-inner {
+  width: 105px;
+  height: 105px;
+  animation: relay-spin-reverse 4.5s linear infinite;
+}
+
+.boot-system {
+  min-height: 125px;
+  padding: 18px;
+  border: 1px solid rgba(255, 72, 72, 0.2);
+  background: rgba(0, 0, 0, 0.38);
+  animation: relay-system-enter 240ms ease-out;
+}
+
+.boot-system-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.boot-system-heading strong {
+  color: #eaa0a0;
+  font-size: 14px;
+  letter-spacing: 0.13em;
+}
+
+.boot-system-heading span {
+  color: #ff4d4d;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.boot-bar {
+  height: 10px;
+  overflow: hidden;
+  margin-top: 21px;
+  border: 1px solid rgba(255, 72, 72, 0.42);
+  background: #170607;
+}
+
+.boot-bar span {
+  display: block;
+  height: 100%;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #ff4141 0,
+      #ff4141 12px,
+      #b52027 12px,
+      #b52027 15px
+    );
+  box-shadow: 0 0 15px rgba(255, 65, 65, 0.65);
+  transition: width 60ms linear;
+}
+
+.boot-system footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 13px;
+  color: #7f5151;
+  font-size: 9px;
+  letter-spacing: 0.13em;
+}
+
+.boot-final-message {
+  min-height: 125px;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  animation: relay-access-flicker 460ms linear;
+}
+
+.boot-final-message p {
+  margin: 0 0 10px;
+  color: #9c6565;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+}
+
+.boot-final-message h1 {
+  margin: 0;
+  color: #ff5151;
+  font-size: clamp(28px, 6vw, 46px);
+  letter-spacing: 0.13em;
+  text-shadow:
+    0 0 12px rgba(255, 55, 55, 0.6),
+    0 0 35px rgba(255, 40, 40, 0.3);
+}
+
+.boot-final-message strong {
+  display: block;
+  margin-top: 13px;
+  color: #b67a7a;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+}
+
+@keyframes relay-scan {
+  from {
+    transform: translateY(-130px);
+  }
+
+  to {
+    transform: translateY(calc(100vh + 130px));
+  }
+}
+
+@keyframes relay-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes relay-spin-reverse {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes relay-core-pulse {
+  50% {
+    transform: scale(1.07);
+    filter: brightness(1.35);
+  }
+}
+
+@keyframes relay-system-enter {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes relay-access-flicker {
+  0%,
+  22%,
+  48% {
+    opacity: 0.18;
+  }
+
+  12%,
+  35%,
+  62%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 620px) {
+  .boot-screen {
+    padding: 10px;
+  }
+
+  .boot-v3 {
+    padding: 17px;
+  }
+
+  .boot-v3-header {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .boot-v3-core {
+    width: 160px;
+    height: 160px;
+  }
+
+  .core-ring-outer {
+    width: 135px;
+    height: 135px;
+  }
+
+  .core-ring-inner {
+    width: 90px;
+    height: 90px;
+  }
+}

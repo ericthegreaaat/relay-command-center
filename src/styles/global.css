@@ -222,3 +222,276 @@
 
 .sync-note{padding:12px 14px;border:1px solid var(--border);border-radius:10px;color:var(--muted);background:#091625;font-size:13px}
 .last-updated{font-weight:700}
+
+.boot-screen {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  overflow: hidden;
+  color: #ff4b4b;
+  background:
+    linear-gradient(rgba(255, 50, 50, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 50, 50, 0.025) 1px, transparent 1px),
+    radial-gradient(circle at center, #18090b 0%, #050607 62%, #010202 100%);
+  background-size: 32px 32px, 32px 32px, auto;
+  font-family: "Courier New", monospace;
+}
+
+.boot-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.018) 0,
+    rgba(255, 255, 255, 0.018) 1px,
+    transparent 2px,
+    transparent 5px
+  );
+}
+
+.boot-scanline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 100px;
+  opacity: 0.13;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 45, 45, 0.45),
+    transparent
+  );
+  animation: boot-scan 2.7s linear infinite;
+}
+
+.boot-console {
+  position: relative;
+  z-index: 1;
+  width: min(820px, 100%);
+  padding: 24px;
+  border: 1px solid rgba(255, 75, 75, 0.36);
+  background: rgba(4, 6, 7, 0.9);
+  box-shadow:
+    inset 0 0 40px rgba(255, 25, 25, 0.05),
+    0 0 45px rgba(255, 25, 25, 0.09);
+}
+
+.boot-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 75, 75, 0.28);
+  color: #a96e6e;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+}
+
+.boot-core {
+  padding: 40px 0 28px;
+  text-align: center;
+}
+
+.boot-core-symbol {
+  position: relative;
+  width: 78px;
+  height: 78px;
+  margin: 0 auto 20px;
+  border: 1px solid #ff3f3f;
+  border-radius: 50%;
+  animation: boot-pulse 1.4s ease-in-out infinite;
+}
+
+.boot-core-symbol::before,
+.boot-core-symbol::after {
+  content: "";
+  position: absolute;
+  background: #ff3f3f;
+}
+
+.boot-core-symbol::before {
+  top: 50%;
+  left: -14px;
+  right: -14px;
+  height: 1px;
+}
+
+.boot-core-symbol::after {
+  top: -14px;
+  bottom: -14px;
+  left: 50%;
+  width: 1px;
+}
+
+.boot-core-symbol span {
+  position: absolute;
+  inset: 14px;
+  border: 1px solid rgba(255, 63, 63, 0.7);
+  border-radius: 50%;
+}
+
+.boot-core-symbol span:nth-child(2) {
+  inset: 25px;
+  background: #ff3939;
+  box-shadow: 0 0 18px rgba(255, 57, 57, 0.8);
+}
+
+.boot-core-symbol span:nth-child(3) {
+  inset: 7px;
+  border-style: dashed;
+  animation: boot-spin 3s linear infinite;
+}
+
+.boot-kicker {
+  margin: 0 0 8px;
+  color: #a66;
+  font-size: 12px;
+  letter-spacing: 0.25em;
+}
+
+.boot-core h1 {
+  margin: 0;
+  color: #ff5050;
+  font-size: clamp(26px, 5vw, 48px);
+  letter-spacing: 0.13em;
+  text-shadow: 0 0 18px rgba(255, 50, 50, 0.35);
+}
+
+.boot-terminal {
+  min-height: 220px;
+  padding: 18px;
+  border: 1px solid rgba(255, 75, 75, 0.22);
+  background: rgba(0, 0, 0, 0.42);
+}
+
+.boot-line {
+  display: grid;
+  grid-template-columns: 20px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  min-height: 29px;
+  color: #bc8585;
+  font-size: 12px;
+}
+
+.boot-line p {
+  margin: 0;
+}
+
+.boot-line span,
+.boot-line strong {
+  color: #ff4d4d;
+}
+
+.boot-line strong {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+
+.boot-progress {
+  display: grid;
+  grid-template-columns: 1fr 52px;
+  gap: 12px;
+  align-items: center;
+  margin-top: 18px;
+}
+
+.boot-progress > div {
+  height: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 75, 75, 0.35);
+  background: #120607;
+}
+
+.boot-progress span {
+  display: block;
+  height: 100%;
+  background: #ff4141;
+  box-shadow: 0 0 14px rgba(255, 65, 65, 0.65);
+  transition: width 80ms linear;
+}
+
+.boot-progress p {
+  margin: 0;
+  color: #ff5a5a;
+  font-size: 11px;
+}
+
+.boot-auth {
+  margin-top: 22px;
+  padding: 18px;
+  border-left: 3px solid #ff4545;
+  background: rgba(255, 50, 50, 0.055);
+  animation: boot-flicker 0.35s ease-out;
+}
+
+.boot-auth p,
+.boot-auth strong,
+.boot-auth small {
+  display: block;
+  margin: 0;
+}
+
+.boot-auth p {
+  color: #9e6767;
+  font-size: 10px;
+  letter-spacing: 0.17em;
+}
+
+.boot-auth strong {
+  margin-top: 8px;
+  color: #ff5151;
+  font-size: 16px;
+  letter-spacing: 0.08em;
+}
+
+.boot-auth small {
+  margin-top: 7px;
+  color: #966;
+}
+
+@keyframes boot-scan {
+  from {
+    transform: translateY(-120px);
+  }
+
+  to {
+    transform: translateY(calc(100vh + 120px));
+  }
+}
+
+@keyframes boot-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes boot-pulse {
+  50% {
+    transform: scale(1.04);
+    box-shadow: 0 0 25px rgba(255, 45, 45, 0.28);
+  }
+}
+
+@keyframes boot-flicker {
+  0%,
+  35% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0.35;
+  }
+
+  70% {
+    opacity: 0.1;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
