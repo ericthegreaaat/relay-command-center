@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Bell, CirclePlus, LogOut, RefreshCw } from "lucide-react";
 import Sidebar from "./components/Sidebar";
+import BootSequence from "./components/BootSequence";
 import DashboardPage from "./pages/DashboardPage";
 import CustomersPage from "./pages/CustomersPage";
 import ReportsPage from "./pages/ReportsPage";
@@ -29,7 +30,11 @@ const demoTickets = [{
 }];
 
 export default function App() {
+  
   const [user,setUser]=useState(sessionStorage.getItem("relaySession")||"");
+  const [bootComplete, setBootComplete] = useState(
+  sessionStorage.getItem("relayBootComplete") === "true"
+);
   const [view,setView]=useState("dashboard");
   const [tickets,setTickets]=useState([]);
   const [selectedId,setSelectedId]=useState("");
@@ -130,6 +135,16 @@ export default function App() {
     loadTickets();
   };
 
+  if (!bootComplete) {
+  return (
+    <BootSequence
+      onComplete={() => {
+        sessionStorage.setItem("relayBootComplete", "true");
+        setBootComplete(true);
+      }}
+    />
+  );
+}
   if(!user)return <LoginPage onLogin={setUser}/>;
 
   const title = {
