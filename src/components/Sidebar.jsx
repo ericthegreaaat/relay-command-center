@@ -22,7 +22,18 @@ export default function Sidebar({ active, onChange, connection }) {
   return (
     <aside className="sidebar">
       <div className="brand">
-        <img src="/relay-mark.svg" alt="" />
+        <img
+  src="/relay-mark.svg"
+  alt="Relay"
+  style={{
+    width: "42px",
+    height: "42px",
+    maxWidth: "42px",
+    maxHeight: "42px",
+    objectFit: "contain",
+    display: "block"
+  }}
+/>
         <div><h1>Relay</h1><p>PAX Telecom</p></div>
       </div>
 

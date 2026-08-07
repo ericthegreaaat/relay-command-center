@@ -1,6 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import "../styles/BootSequence.css";
 
+const bootChecks = [
+  "POWER CONDUIT CHECK",
+  "CORE TEMPERATURE",
+  "MEMORY ARRAY",
+  "PRIMARY NETWORK LINK",
+  "BACKUP NETWORK LINK",
+  "STORAGE ARRAY",
+  "SECURITY PROTOCOL",
+  "USER AUTHENTICATION",
+  "ARCHITECT AUTHORIZATION",
+];
+
 const subsystems = [
   "COMMUNICATIONS ARRAY",
   "OPERATIONS DATABASE",
@@ -13,225 +25,43 @@ const wait = (milliseconds) =>
 
 export default function BootSequence({ onComplete }) {
   const [started, setStarted] = useState(false);
-  const [stage, setStage] = useState("systems");
+  const [stage, setStage] = useState("standby");
   const [systemIndex, setSystemIndex] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [elapsedSeconds, setElapsedSeconds] = useState(3);
 
-  const audioContextRef = useRef(null);
-  const humRef = useRef(null);
-
-  const createTone = ({
-    frequency = 220,
-    endFrequency,
-    duration = 0.2,
-    volume = 0.05,
-    type = "sine",
-    delay = 0,
-  }) => {
-    const context = audioContextRef.current;
-    if (!context) return;
-
-    const startTime = context.currentTime + delay;
-    const oscillator = context.createOscillator();
-    const gain = context.createGain();
-
-    oscillator.type = type;
-    oscillator.frequency.setValueAtTime(frequency, startTime);
-
-    if (endFrequency) {
-      oscillator.frequency.exponentialRampToValueAtTime(
-        endFrequency,
-        startTime + duration
-      );
-    }
-
-    gain.gain.setValueAtTime(0.0001, startTime);
-    gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.03);
-    gain.gain.exponentialRampToValueAtTime(
-      0.0001,
-      startTime + duration
-    );
-
-    oscillator.connect(gain);
-    gain.connect(context.destination);
-
-    oscillator.start(startTime);
-    oscillator.stop(startTime + duration + 0.05);
-  };
-
-  const startHum = () => {
-    const context = audioContextRef.current;
-
-    if (!context || humRef.current) return;
-
-    const oscillator = context.createOscillator();
-    const filter = context.createBiquadFilter();
-    const gain = context.createGain();
-
-    oscillator.type = "sawtooth";
-    oscillator.frequency.value = 46;
-
-    filter.type = "lowpass";
-    filter.frequency.value = 155;
-
-    gain.gain.value = 0.016;
-
-    oscillator.connect(filter);
-    filter.connect(gain);
-    gain.connect(context.destination);
-
-    oscillator.start();
-
-    humRef.current = { oscillator, gain };
-  };
-
-  const stopHum = () => {
-    const context = audioContextRef.current;
-    const hum = humRef.current;
-
-    if (!context || !hum) return;
-
-    const now = context.currentTime;
-
-    try {
-      hum.gain.gain.setValueAtTime(
-        Math.max(hum.gain.gain.value, 0.0001),
-        now
-      );
-
-      hum.gain.gain.exponentialRampToValueAtTime(
-        0.0001,
-        now + 0.8
-      );
-
-      hum.oscillator.stop(now + 0.9);
-    } catch {
-      // The oscillator may already be stopped.
-    }
-
-    humRef.current = null;
-  };
-
-  const playStartupSound = () => {
-    startHum();
-
-    // Mechanical power relays
-    createTone({
-      frequency: 82,
-      duration: 0.09,
-      volume: 0.1,
-      type: "square",
-    });
-
-    createTone({
-      frequency: 120,
-      duration: 0.07,
-      volume: 0.07,
-      type: "square",
-      delay: 0.18,
-    });
-
-    // Ship-computer wake-up sweep
-    createTone({
-      frequency: 95,
-      endFrequency: 680,
-      duration: 1.25,
-      volume: 0.055,
-      type: "sawtooth",
-      delay: 0.35,
-    });
-
-    // Sensor chirps
-    createTone({
-      frequency: 760,
-      duration: 0.12,
-      volume: 0.045,
-      delay: 1.75,
-    });
-
-    createTone({
-      frequency: 1120,
-      duration: 0.1,
-      volume: 0.04,
-      delay: 2.02,
-    });
-  };
-
-  const playOnlineTone = () => {
-    createTone({
-      frequency: 410,
-      duration: 0.08,
-      volume: 0.038,
-      type: "square",
-    });
-
-    createTone({
-      frequency: 690,
-      duration: 0.16,
-      volume: 0.04,
-      delay: 0.08,
-    });
-  };
-
-  const playAccessGrantedTone = () => {
-    createTone({
-      frequency: 68,
-      endFrequency: 52,
-      duration: 0.65,
-      volume: 0.12,
-    });
-
-    createTone({
-      frequency: 440,
-      duration: 0.22,
-      volume: 0.05,
-      delay: 0.34,
-    });
-
-    createTone({
-      frequency: 660,
-      duration: 0.4,
-      volume: 0.045,
-      delay: 0.53,
-    });
-  };
-
-  const playCommandReadyTone = () => {
-    createTone({
-      frequency: 330,
-      duration: 0.25,
-      volume: 0.045,
-    });
-
-    createTone({
-      frequency: 495,
-      duration: 0.32,
-      volume: 0.04,
-      delay: 0.2,
-    });
-
-    createTone({
-      frequency: 742,
-      duration: 0.5,
-      volume: 0.035,
-      delay: 0.43,
-    });
-  };
+  const audioRef = useRef(null);
 
   const initiateSystem = async () => {
-    const AudioContextClass =
-      window.AudioContext || window.webkitAudioContext;
+    if (started) return;
 
-    if (AudioContextClass) {
-      const context = new AudioContextClass();
-      audioContextRef.current = context;
+    const audio = audioRef.current;
 
-      await context.resume();
-      playStartupSound();
+    if (audio) {
+      audio.currentTime = 0;
+      audio.volume = 0.75;
+
+      try {
+        await audio.play();
+      } catch (error) {
+        console.warn("Relay startup audio could not play:", error);
+      }
     }
 
     setStarted(true);
+    setStage("systems");
+    setProgress(0);
   };
+
+  useEffect(() => {
+    if (!started) return undefined;
+
+    const timer = window.setInterval(() => {
+      setElapsedSeconds((current) => current + 1);
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [started]);
 
   useEffect(() => {
     if (!started) return undefined;
@@ -241,48 +71,45 @@ export default function BootSequence({ onComplete }) {
     const runSequence = async () => {
       setStage("systems");
 
+      await wait(650);
+
       for (let index = 0; index < subsystems.length; index += 1) {
         if (cancelled) return;
 
         setSystemIndex(index);
         setProgress(0);
 
-        for (let value = 0; value < 100; value += 8) {
+        for (let value = 0; value <= 100; value += 2) {
           if (cancelled) return;
 
           setProgress(value);
-          await wait(80);
+          await wait(75);
         }
 
-        setProgress(100);
-        playOnlineTone();
-        await wait(320);
+        await wait(350);
       }
 
       if (cancelled) return;
 
       setStage("access");
-      playAccessGrantedTone();
       await wait(1500);
 
       if (cancelled) return;
 
       setStage("welcome");
-      await wait(2300);
+      await wait(1900);
 
       if (cancelled) return;
 
       setStage("ready");
-      playCommandReadyTone();
-      await wait(1500);
+      await wait(1700);
 
       if (cancelled) return;
 
       setStage("exit");
-      stopHum();
-      await wait(900);
+      await wait(1000);
 
-      if (!cancelled) {
+      if (!cancelled && typeof onComplete === "function") {
         onComplete();
       }
     };
@@ -291,95 +118,271 @@ export default function BootSequence({ onComplete }) {
 
     return () => {
       cancelled = true;
-      stopHum();
+
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
     };
   }, [started, onComplete]);
 
+  const displayProgress = started ? progress : 72;
+
+  const formatUptime = (seconds) => {
+    const hours = String(Math.floor(seconds / 3600)).padStart(2, "0");
+    const minutes = String(Math.floor((seconds % 3600) / 60)).padStart(
+      2,
+      "0"
+    );
+    const remainingSeconds = String(seconds % 60).padStart(2, "0");
+
+    return `${hours}:${minutes}:${remainingSeconds}`;
+  };
+
+  const getCheckStatus = (check, index) => {
+    if (check === "CORE TEMPERATURE") {
+      return "36.2 C";
+    }
+
+    if (check === "USER AUTHENTICATION") {
+      return started ? "VERIFIED" : "PENDING";
+    }
+
+    if (check === "ARCHITECT AUTHORIZATION") {
+      return started ? "VERIFIED" : "REQUIRED";
+    }
+
+    if (!started) {
+      return "OK";
+    }
+
+    const completedThreshold =
+      (systemIndex / Math.max(subsystems.length - 1, 1)) *
+      bootChecks.length;
+
+    return index <= completedThreshold ? "OK" : "CHECK";
+  };
+
   return (
     <div className={`relay-boot-screen relay-boot-${stage}`}>
+      <audio
+        ref={audioRef}
+        src="/audio/relay-startup.mp3"
+        preload="auto"
+      />
+
       <div className="relay-boot-grid" />
       <div className="relay-boot-scanline" />
+      <div className="relay-screen-flicker" />
 
-      {!started ? (
+      <main className="relay-terminal">
+        <header className="relay-terminal-header">
+          <div className="relay-header-row">
+            <span>RELAY COMMAND OS v2.7.1</span>
+            <span>NOSTROMO INTERFACE UNIT</span>
+          </div>
+
+          <div className="relay-header-divider">
+            +--------------------------------------------------------------+
+          </div>
+
+          <div className="relay-header-row">
+            <span>| SECURE BOOT SEQUENCE</span>
+            <span>SYS-ID: PAX-RELAY-01 |</span>
+          </div>
+
+          <div className="relay-header-divider">
+            +--------------------------------------------------------------+
+          </div>
+        </header>
+
+        <section className="relay-upper-layout">
+          <div className="relay-boot-checks">
+            <h2>
+              {started ? "> INITIATING SYSTEM..." : "> SYSTEM STANDBY"}
+            </h2>
+
+            <div className="relay-check-list">
+              {bootChecks.map((check, index) => {
+                const status = getCheckStatus(check, index);
+                const warning =
+                  status === "PENDING" ||
+                  status === "REQUIRED" ||
+                  status === "CHECK";
+
+                return (
+                  <div className="relay-check-row" key={check}>
+                    <span>{check}</span>
+
+                    <strong className={warning ? "relay-warning" : ""}>
+                      [ {status} ]
+                    </strong>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="relay-command-cursor">
+              <span>&gt;</span>
+              <i />
+            </div>
+          </div>
+
+          <aside className="relay-diagnostics-panel">
+            <h3>SYSTEM DIAGNOSTICS</h3>
+            <div className="relay-panel-rule" />
+
+            <div className="relay-diagnostic-row">
+              <span>CPU USAGE</span>
+              <strong>{started ? "18%" : "04%"}</strong>
+            </div>
+
+            <div className="relay-diagnostic-row">
+              <span>MEMORY</span>
+              <strong>{started ? "24%" : "012%"}</strong>
+            </div>
+
+            <div className="relay-diagnostic-row">
+              <span>NET IN</span>
+              <strong>{started ? "12.4 KB/S" : "00.0 KB/S"}</strong>
+            </div>
+
+            <div className="relay-diagnostic-row">
+              <span>NET OUT</span>
+              <strong>{started ? "08.7 KB/S" : "00.0 KB/S"}</strong>
+            </div>
+
+            <div className="relay-diagnostic-row">
+              <span>UPTIME</span>
+              <strong>{formatUptime(elapsedSeconds)}</strong>
+            </div>
+
+            <div className="relay-panel-divider" />
+
+            <h3>SUBSYSTEM STATUS</h3>
+            <div className="relay-panel-rule" />
+
+            {[
+              "LIFE SUPPORT",
+              "ENV MONITOR",
+              "GRAV STABILIZER",
+              "NAVIGATION",
+              "COMMS ARRAY",
+              "PAYLOAD SYS",
+            ].map((item) => (
+              <div className="relay-diagnostic-row" key={item}>
+                <span>{item}</span>
+                <strong>[ OK ]</strong>
+              </div>
+            ))}
+          </aside>
+        </section>
+
+        <section className="relay-core-layout">
+          <div className="relay-core-side relay-core-side-left">
+            <span>RELAY COMMAND</span>
+            <span>OPERATING SYSTEM</span>
+            <span>v2.7.1</span>
+          </div>
+
+          <div className="relay-core-display">
+            <div className="relay-core-crosshair relay-crosshair-top" />
+            <div className="relay-core-crosshair relay-crosshair-right" />
+            <div className="relay-core-crosshair relay-crosshair-bottom" />
+            <div className="relay-core-crosshair relay-crosshair-left" />
+
+            <div className="relay-core-bracket relay-bracket-top-left" />
+            <div className="relay-core-bracket relay-bracket-top-right" />
+            <div className="relay-core-bracket relay-bracket-bottom-left" />
+            <div className="relay-core-bracket relay-bracket-bottom-right" />
+
+            <div className="relay-core-ring relay-core-ring-outer" />
+            <div className="relay-core-ring relay-core-ring-middle" />
+            <div className="relay-core-ring relay-core-ring-inner" />
+
+            <div className="relay-core-eye">
+              <span className="relay-core-small-line" />
+              <strong>
+                {stage === "access"
+                  ? "ACCESS\nGRANTED"
+                  : stage === "welcome"
+                    ? "WELCOME"
+                    : stage === "ready" || stage === "exit"
+                      ? "COMMAND\nREADY"
+                      : started
+                        ? "CORE\nLOADING"
+                        : "CORE\nONLINE"}
+              </strong>
+              <span className="relay-core-small-line" />
+            </div>
+          </div>
+
+          <div className="relay-core-side relay-core-side-right">
+            <span>ARCHITECT LEVEL</span>
+            <span>{started ? "ACCESS VERIFIED" : "ACCESS REQUIRED"}</span>
+          </div>
+        </section>
+
+        <section className="relay-loading-section">
+          <h2>
+            &gt;{" "}
+            {started
+              ? `LOADING ${subsystems[systemIndex]}...`
+              : "LOADING CORE SYSTEM MODULES..."}
+          </h2>
+
+          <div className="relay-loading-row">
+            <div className="relay-progress-track">
+              <span style={{ width: `${displayProgress}%` }} />
+            </div>
+
+            <strong>{displayProgress}%</strong>
+          </div>
+
+          <p>
+            EST. TIME REMAINING:{" "}
+            {started && displayProgress < 100 ? "00:00:18" : "00:00:00"}
+          </p>
+        </section>
+
         <button
           type="button"
           className="relay-initiate"
           onClick={initiateSystem}
+          disabled={started}
         >
           <span>RELAY COMMAND OS</span>
-          <strong>INITIATE SYSTEM</strong>
-          <small>ARCHITECT AUTHORIZATION REQUIRED</small>
+
+          <strong>
+            &gt;{" "}
+            {started
+              ? stage === "access"
+                ? "ACCESS GRANTED"
+                : stage === "welcome"
+                  ? "WELCOME ARCHITECT"
+                  : stage === "ready" || stage === "exit"
+                    ? "COMMAND READY"
+                    : "INITIALIZING SYSTEM"
+              : "INITIATE SYSTEM"}
+          </strong>
+
+          <i />
+
+          <small>
+            {started
+              ? "SECURE BOOT SEQUENCE IN PROGRESS"
+              : "ARCHITECT AUTHORIZATION REQUIRED"}
+          </small>
         </button>
-      ) : (
-        <main className="relay-boot-console">
-          <header className="relay-boot-header">
-            <span>RELAY COMMAND OS</span>
-            <span>BUILD 5.0 // SECURE</span>
-          </header>
 
-          <section className="relay-core-display">
-            <div className="relay-core-ring relay-core-ring-outer" />
-            <div className="relay-core-ring relay-core-ring-inner" />
-
-            <div className="relay-core-eye">
-              <span />
-            </div>
-
-            <p>CENTRAL CORE</p>
-          </section>
-
-          {stage === "systems" && (
-            <section
-              className="relay-system-panel"
-              key={subsystems[systemIndex]}
-            >
-              <div className="relay-system-heading">
-                <strong>{subsystems[systemIndex]}</strong>
-                <span>
-                  {progress === 100 ? "ONLINE" : "INITIALIZING"}
-                </span>
-              </div>
-
-              <div className="relay-progress-track">
-                <span style={{ width: `${progress}%` }} />
-              </div>
-
-              <footer>
-                <span>
-                  SYSTEM {String(systemIndex + 1).padStart(2, "0")} /{" "}
-                  {String(subsystems.length).padStart(2, "0")}
-                </span>
-
-                <span>{progress}%</span>
-              </footer>
-            </section>
-          )}
-
-          {stage === "access" && (
-            <section className="relay-final-message">
-              <p>SECURITY CLEARANCE VERIFIED</p>
-              <h1>ACCESS GRANTED</h1>
-              <strong>CENTRAL CORE LINK ESTABLISHED</strong>
-            </section>
-          )}
-
-          {stage === "welcome" && (
-            <section className="relay-final-message">
-              <p>IDENTITY VERIFIED</p>
-              <h1>WELCOME</h1>
-              <strong>ERIC MARTINEZ // THE ARCHITECT</strong>
-            </section>
-          )}
-
-          {(stage === "ready" || stage === "exit") && (
-            <section className="relay-final-message">
-              <p>ALL SYSTEMS NOMINAL</p>
-              <h1>COMMAND READY</h1>
-              <strong>CENTRAL CORE ONLINE</strong>
-            </section>
-          )}
-        </main>
-      )}
+        <footer className="relay-terminal-footer">
+          <span>RELAY COMMAND OS</span>
+          <span>|</span>
+          <span>SECURE</span>
+          <span>|</span>
+          <span>© 2026 PAXTELECOM</span>
+        </footer>
+      </main>
     </div>
   );
 }
