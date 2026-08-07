@@ -1022,3 +1022,206 @@ padding: 12px;
     transform-origin: center center;
   }
 }
+@media (max-width: 560px) {
+  .relay-boot-screen {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .relay-terminal {
+    width: 100vw;
+    height: 100vh;
+    min-height: 0;
+    padding: 12px 12px 0;
+    overflow: hidden;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .relay-terminal-header {
+    font-size: 10px;
+    line-height: 1.25;
+  }
+
+  .relay-header-row {
+    gap: 8px;
+  }
+
+  .relay-upper-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .relay-boot-checks {
+    min-height: 0;
+    padding: 0;
+  }
+
+  .relay-boot-checks h2,
+  .relay-loading-section h2 {
+    margin-bottom: 8px;
+    font-size: 11px;
+  }
+
+  .relay-check-list {
+    gap: 3px;
+    padding-left: 4px;
+  }
+
+  .relay-check-row {
+    grid-template-columns: minmax(0, 1fr) 72px;
+    gap: 4px;
+    font-size: 8px;
+    line-height: 1.1;
+  }
+
+  .relay-command-cursor {
+    margin-top: 10px;
+    font-size: 13px;
+  }
+
+  .relay-command-cursor i {
+    width: 7px;
+    height: 13px;
+  }
+
+  .relay-diagnostics-panel {
+    min-height: 0;
+    padding: 8px;
+  }
+
+  .relay-diagnostics-panel h3 {
+    font-size: 8px;
+  }
+
+  .relay-panel-rule {
+    margin: 5px 0 7px;
+  }
+
+  .relay-panel-divider {
+    margin: 8px 0;
+  }
+
+  .relay-diagnostic-row {
+    gap: 4px;
+    margin: 3px 0;
+    font-size: 7px;
+  }
+
+  .relay-diagnostic-row strong {
+    min-width: 48px;
+  }
+
+  .relay-core-layout {
+    display: grid;
+    grid-template-columns: 72px 150px 72px;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 155px;
+    margin-top: 6px;
+  }
+
+  .relay-core-side {
+    gap: 3px;
+    font-size: 7px;
+    line-height: 1.15;
+  }
+
+  .relay-core-display {
+    width: 145px;
+    height: 145px;
+  }
+
+  .relay-core-ring-outer {
+    width: 138px;
+    height: 138px;
+  }
+
+  .relay-core-ring-middle {
+    width: 124px;
+    height: 124px;
+  }
+
+  .relay-core-ring-inner {
+    width: 102px;
+    height: 102px;
+  }
+
+  .relay-core-eye {
+    width: 82px;
+    height: 82px;
+  }
+
+  .relay-core-eye strong {
+    font-size: 12px;
+  }
+
+  .relay-crosshair-top,
+  .relay-crosshair-bottom {
+    height: 18px;
+  }
+
+  .relay-crosshair-left,
+  .relay-crosshair-right {
+    width: 18px;
+  }
+
+  .relay-core-bracket {
+    width: 14px;
+    height: 14px;
+  }
+
+  .relay-loading-section {
+    margin: 6px 0 0;
+  }
+
+  .relay-loading-row {
+    grid-template-columns: 1fr 36px;
+    gap: 7px;
+  }
+
+  .relay-progress-track {
+    height: 20px;
+  }
+
+  .relay-loading-row > strong {
+    font-size: 13px;
+  }
+
+  .relay-loading-section > p {
+    margin-top: 6px;
+    font-size: 8px;
+  }
+
+  .relay-initiate {
+    width: 100%;
+    margin: 8px auto 6px;
+    padding: 8px 14px;
+  }
+
+  .relay-initiate > span {
+    font-size: 8px;
+  }
+
+  .relay-initiate > strong {
+    font-size: 17px;
+  }
+
+  .relay-initiate > i {
+    margin: 3px 0 7px;
+  }
+
+  .relay-initiate > small {
+    font-size: 7px;
+  }
+
+  .relay-terminal-footer {
+    min-height: 32px;
+    margin: 0 -12px;
+    padding: 0 12px;
+    font-size: 7px;
+  }
+}
